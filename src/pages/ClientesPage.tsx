@@ -38,12 +38,12 @@ export default function ClientesPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Clientes</h1>
           <p className="text-sm text-muted-foreground">{data.length} registros</p>
         </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo Cliente</Button>
+        <Button onClick={openNew} className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-1" /> Novo Cliente</Button>
       </div>
 
       <div className="relative max-w-sm">
@@ -51,34 +51,36 @@ export default function ClientesPage() {
         <Input placeholder="Buscar clientes..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
       </div>
 
-      <Card>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>WhatsApp</TableHead>
-              <TableHead>Escalation</TableHead>
-              <TableHead>Responsável</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-10"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filtered.length === 0 ? (
-              <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Nenhum cliente encontrado.</TableCell></TableRow>
-            ) : filtered.map(c => (
-              <TableRow key={c.id} className={!c.ativo ? 'opacity-50' : ''}>
-                <TableCell className="font-medium">{c.nome}</TableCell>
-                <TableCell className="font-mono text-xs">{c.id_whatsapp}</TableCell>
-                <TableCell className="text-sm">{c.escalation}</TableCell>
-                <TableCell className="text-sm">{getResponsavel(c.responsavel_interno_id)}</TableCell>
-                <TableCell><Badge variant={c.ativo ? 'default' : 'secondary'}>{c.ativo ? 'Ativo' : 'Inativo'}</Badge></TableCell>
-                <TableCell><Button variant="ghost" size="icon" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button></TableCell>
+      <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
+        <div className="table-responsive">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nome</TableHead>
+                <TableHead className="hidden md:table-cell">WhatsApp</TableHead>
+                <TableHead className="hidden lg:table-cell">Escalation</TableHead>
+                <TableHead className="hidden sm:table-cell">Responsável</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-10"></TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
+            </TableHeader>
+            <TableBody>
+              {filtered.length === 0 ? (
+                <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Nenhum cliente encontrado.</TableCell></TableRow>
+              ) : filtered.map(c => (
+                <TableRow key={c.id} className={!c.ativo ? 'opacity-50' : ''}>
+                  <TableCell className="font-medium">{c.nome}</TableCell>
+                  <TableCell className="hidden md:table-cell font-mono text-xs">{c.id_whatsapp}</TableCell>
+                  <TableCell className="hidden lg:table-cell text-sm">{c.escalation}</TableCell>
+                  <TableCell className="hidden sm:table-cell text-sm">{getResponsavel(c.responsavel_interno_id)}</TableCell>
+                  <TableCell><Badge variant={c.ativo ? 'default' : 'secondary'}>{c.ativo ? 'Ativo' : 'Inativo'}</Badge></TableCell>
+                  <TableCell><Button variant="ghost" size="icon" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent>
@@ -110,8 +112,4 @@ export default function ClientesPage() {
       </Sheet>
     </div>
   );
-}
-
-function Card({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-lg border bg-card shadow-sm overflow-hidden">{children}</div>;
 }
