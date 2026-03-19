@@ -36,12 +36,12 @@ export default function EscalasPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Escalas</h1>
           <p className="text-sm text-muted-foreground">{data.length} escalas configuradas</p>
         </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova Escala</Button>
+        <Button onClick={openNew} className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-1" /> Nova Escala</Button>
       </div>
 
       <div className="relative max-w-sm">
@@ -57,15 +57,15 @@ export default function EscalasPage() {
             <Card key={esc.id}>
               <CardHeader className="pb-2 flex flex-row items-start justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                     <CalendarClock className="h-4 w-4 text-primary" />
                   </div>
-                  <div>
-                    <CardTitle className="text-base">{esc.nome}</CardTitle>
-                    <p className="text-xs text-muted-foreground">{esc.descricao}</p>
+                  <div className="min-w-0">
+                    <CardTitle className="text-base truncate">{esc.nome}</CardTitle>
+                    <p className="text-xs text-muted-foreground truncate">{esc.descricao}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <Badge variant="outline">{tipoLabels[esc.tipo]}</Badge>
                   <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(esc)}><Pencil className="h-3 w-3" /></Button>
                 </div>

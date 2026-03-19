@@ -40,12 +40,12 @@ export default function GestoresPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Gestores</h1>
           <p className="text-sm text-muted-foreground">{data.length} gestores</p>
         </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo Gestor</Button>
+        <Button onClick={openNew} className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-1" /> Novo Gestor</Button>
       </div>
 
       <div className="relative max-w-sm">
@@ -53,20 +53,20 @@ export default function GestoresPage() {
         <Input placeholder="Buscar gestores..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(g => (
           <Card key={g.id}>
             <CardHeader className="pb-2 flex flex-row items-start justify-between">
               <div className="flex items-center gap-2">
-                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <UserCog className="h-4 w-4 text-primary" />
                 </div>
-                <div>
-                  <CardTitle className="text-base">{g.nome}</CardTitle>
-                  <p className="text-xs text-muted-foreground">{g.email}</p>
+                <div className="min-w-0">
+                  <CardTitle className="text-base truncate">{g.nome}</CardTitle>
+                  <p className="text-xs text-muted-foreground truncate">{g.email}</p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(g)}>
+              <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => openEdit(g)}>
                 <Pencil className="h-3 w-3" />
               </Button>
             </CardHeader>

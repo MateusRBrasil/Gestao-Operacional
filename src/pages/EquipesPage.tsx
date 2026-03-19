@@ -33,12 +33,12 @@ export default function EquipesPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Equipes</h1>
           <p className="text-sm text-muted-foreground">{data.length} equipes cadastradas</p>
         </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova Equipe</Button>
+        <Button onClick={openNew} className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-1" /> Nova Equipe</Button>
       </div>
 
       <div className="relative max-w-sm">
@@ -46,7 +46,7 @@ export default function EquipesPage() {
         <Input placeholder="Buscar equipes..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {filtered.map(eq => {
           const membros = colaboradores.filter(c => c.equipe_id === eq.id && c.ativo);
           const cliente = clientes.find(c => c.id === eq.cliente_id);

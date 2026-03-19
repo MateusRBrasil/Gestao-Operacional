@@ -41,12 +41,12 @@ export default function FeriasPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Férias</h1>
           <p className="text-sm text-muted-foreground">{data.length} registros de férias</p>
         </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Registrar Férias</Button>
+        <Button onClick={openNew} className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-1" /> Registrar Férias</Button>
       </div>
 
       <div className="relative max-w-sm">
@@ -55,38 +55,40 @@ export default function FeriasPage() {
       </div>
 
       <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Colaborador</TableHead>
-              <TableHead>Início</TableHead>
-              <TableHead>Fim</TableHead>
-              <TableHead>Dias</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-10"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filtered.length === 0 ? (
-              <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Nenhum registro encontrado.</TableCell></TableRow>
-            ) : filtered.map(f => {
-              const colab = colaboradores.find(c => c.id === f.colaborador_id);
-              const dias = f.data_inicio && f.data_fim
-                ? Math.ceil((new Date(f.data_fim).getTime() - new Date(f.data_inicio).getTime()) / 86400000) + 1
-                : 0;
-              return (
-                <TableRow key={f.id}>
-                  <TableCell className="font-medium">{colab?.nome}</TableCell>
-                  <TableCell className="font-mono text-xs">{f.data_inicio}</TableCell>
-                  <TableCell className="font-mono text-xs">{f.data_fim}</TableCell>
-                  <TableCell className="font-mono text-sm">{dias}</TableCell>
-                  <TableCell><Badge variant={statusVariant(f.status)}>{statusLabels[f.status]}</Badge></TableCell>
-                  <TableCell><Button variant="ghost" size="icon" onClick={() => openEdit(f)}><Pencil className="h-4 w-4" /></Button></TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+        <div className="table-responsive">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Colaborador</TableHead>
+                <TableHead>Início</TableHead>
+                <TableHead className="hidden sm:table-cell">Fim</TableHead>
+                <TableHead className="hidden md:table-cell">Dias</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-10"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.length === 0 ? (
+                <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Nenhum registro encontrado.</TableCell></TableRow>
+              ) : filtered.map(f => {
+                const colab = colaboradores.find(c => c.id === f.colaborador_id);
+                const dias = f.data_inicio && f.data_fim
+                  ? Math.ceil((new Date(f.data_fim).getTime() - new Date(f.data_inicio).getTime()) / 86400000) + 1
+                  : 0;
+                return (
+                  <TableRow key={f.id}>
+                    <TableCell className="font-medium">{colab?.nome}</TableCell>
+                    <TableCell className="font-mono text-xs">{f.data_inicio}</TableCell>
+                    <TableCell className="hidden sm:table-cell font-mono text-xs">{f.data_fim}</TableCell>
+                    <TableCell className="hidden md:table-cell font-mono text-sm">{dias}</TableCell>
+                    <TableCell><Badge variant={statusVariant(f.status)}>{statusLabels[f.status]}</Badge></TableCell>
+                    <TableCell><Button variant="ghost" size="icon" onClick={() => openEdit(f)}><Pencil className="h-4 w-4" /></Button></TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>

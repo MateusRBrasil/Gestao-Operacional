@@ -45,21 +45,21 @@ export default function ColaboradoresPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">Colaboradores</h1>
           <p className="text-sm text-muted-foreground">{data.filter(c => c.ativo).length} ativos de {data.length}</p>
         </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo Colaborador</Button>
+        <Button onClick={openNew} className="w-full sm:w-auto"><Plus className="h-4 w-4 mr-1" /> Novo Colaborador</Button>
       </div>
 
-      <div className="flex gap-3 flex-wrap">
-        <div className="relative max-w-sm flex-1">
+      <div className="flex gap-3 flex-col sm:flex-row">
+        <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
         <Select value={filterEquipe} onValueChange={setFilterEquipe}>
-          <SelectTrigger className="w-48"><SelectValue placeholder="Equipe" /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-48"><SelectValue placeholder="Equipe" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas equipes</SelectItem>
             {equipes.map(eq => <SelectItem key={eq.id} value={eq.id}>{eq.nome}</SelectItem>)}
@@ -68,37 +68,42 @@ export default function ColaboradoresPage() {
       </div>
 
       <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>E-mail</TableHead>
-              <TableHead>Equipe</TableHead>
-              <TableHead>Contrato</TableHead>
-              <TableHead>Modelo</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-10"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filtered.length === 0 ? (
-              <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Nenhum colaborador encontrado.</TableCell></TableRow>
-            ) : filtered.map(c => (
-              <TableRow key={c.id} className={!c.ativo ? 'opacity-50' : ''}>
-                <TableCell className="font-medium">
-                  {c.nome}
-                  {emFerias.has(c.id) && <Badge variant="secondary" className="ml-2 text-[10px]">Férias</Badge>}
-                </TableCell>
-                <TableCell className="text-sm">{c.email}</TableCell>
-                <TableCell className="text-sm">{equipes.find(e => e.id === c.equipe_id)?.nome}</TableCell>
-                <TableCell><Badge variant="outline" className="text-xs">{contratoLabels[c.tipo_contrato]}</Badge></TableCell>
-                <TableCell className="text-xs">{modeloLabels[c.modelo_trabalho]}</TableCell>
-                <TableCell><Badge variant={c.ativo ? 'default' : 'secondary'}>{c.ativo ? 'Ativo' : 'Inativo'}</Badge></TableCell>
-                <TableCell><Button variant="ghost" size="icon" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button></TableCell>
+        <div className="table-responsive">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nome</TableHead>
+                <TableHead className="hidden md:table-cell">E-mail</TableHead>
+                <TableHead className="hidden lg:table-cell">Equipe</TableHead>
+                <TableHead className="hidden sm:table-cell">Contrato</TableHead>
+                <TableHead className="hidden lg:table-cell">Modelo</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="w-10"></TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {filtered.length === 0 ? (
+                <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">Nenhum colaborador encontrado.</TableCell></TableRow>
+              ) : filtered.map(c => (
+                <TableRow key={c.id} className={!c.ativo ? 'opacity-50' : ''}>
+                  <TableCell className="font-medium">
+                    <div>
+                      {c.nome}
+                      {emFerias.has(c.id) && <Badge variant="secondary" className="ml-2 text-[10px]">Férias</Badge>}
+                      <p className="text-xs text-muted-foreground md:hidden">{c.email}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell text-sm">{c.email}</TableCell>
+                  <TableCell className="hidden lg:table-cell text-sm">{equipes.find(e => e.id === c.equipe_id)?.nome}</TableCell>
+                  <TableCell className="hidden sm:table-cell"><Badge variant="outline" className="text-xs">{contratoLabels[c.tipo_contrato]}</Badge></TableCell>
+                  <TableCell className="hidden lg:table-cell text-xs">{modeloLabels[c.modelo_trabalho]}</TableCell>
+                  <TableCell><Badge variant={c.ativo ? 'default' : 'secondary'}>{c.ativo ? 'Ativo' : 'Inativo'}</Badge></TableCell>
+                  <TableCell><Button variant="ghost" size="icon" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       <Sheet open={open} onOpenChange={setOpen}>

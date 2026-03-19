@@ -56,8 +56,9 @@ export default function PlantoesPage() {
             <Button variant="ghost" size="icon" onClick={nextMonth}><ChevronRight className="h-4 w-4" /></Button>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-7 gap-px bg-border rounded-lg overflow-hidden">
+        <CardContent className="p-2 sm:p-6">
+          {/* Desktop calendar */}
+          <div className="hidden sm:grid grid-cols-7 gap-px bg-border rounded-lg overflow-hidden">
             {diasSemanaHeader.map(d => (
               <div key={d} className="bg-muted p-2 text-center text-xs font-medium text-muted-foreground">{d}</div>
             ))}
@@ -91,6 +92,40 @@ export default function PlantoesPage() {
                     {dayPlantoes.length > 3 && (
                       <p className="text-[9px] text-muted-foreground">+{dayPlantoes.length - 3}</p>
                     )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Mobile list view */}
+          <div className="sm:hidden space-y-2">
+            {calendarDays.filter((d): d is number => d !== null).map(day => {
+              const dateStr = fmt(day);
+              const dayPlantoes = plantoes.filter(p => p.data === dateStr);
+              if (dayPlantoes.length === 0) return null;
+              const today = new Date();
+              const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+
+              return (
+                <div key={dateStr} className={`rounded-lg border p-3 ${isToday ? 'ring-2 ring-primary' : ''}`}>
+                  <p className={`text-sm font-medium mb-2 ${isToday ? 'text-primary' : ''}`}>
+                    {day} — {new Date(year, month, day).toLocaleDateString('pt-BR', { weekday: 'short' })}
+                  </p>
+                  <div className="space-y-1">
+                    {dayPlantoes.map(p => {
+                      const colab = colaboradores.find(c => c.id === p.colaborador_id);
+                      const emFeriasFlag = isEmFerias(p.colaborador_id, dateStr);
+                      return (
+                        <div key={p.id} className={`flex items-center justify-between text-xs ${emFeriasFlag ? 'line-through text-muted-foreground' : ''}`}>
+                          <span>{colab?.nome}</span>
+                          <div className="flex items-center gap-1">
+                            <span className="font-mono">{p.hora_inicio}–{p.hora_fim}</span>
+                            <Badge variant={tipoBadge(p.tipo)} className="text-[9px] px-1 py-0 h-auto">{p.tipo[0].toUpperCase()}</Badge>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );
